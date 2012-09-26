@@ -32,11 +32,15 @@
   "Ack command with helm interface"
   :group 'helm)
 
-(defvar helm-c-ack-base-command
-  "ack --nocolor --nogroup")
+(defcustom helm-c-ack-base-command "ack --nocolor --nogroup"
+  "Base command of `ack'"
+  :type 'string
+  :group 'helm-ack)
 
-(defvar helm-c-ack-auto-set-filetype t
-  "Setting file type automatically")
+(defcustom helm-c-ack-auto-set-filetype t
+  "Setting file type automatically"
+  :type 'boolean
+  :group 'helm-ack)
 
 (defun helm-c-ack-mode-to-type (mode)
   (case mode
