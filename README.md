@@ -3,12 +3,16 @@
 ## Introduction
 `helm-ack.el` is App::ack helm interface.
 
+## Screenshot
+
+![helm-ack](https://github.com/syohex/emacs-helm-ack/raw/master/image/helm-ack.png)
+
 
 ## Requirements
 
 * Emacs 22.1 or higher
 * helm 1.0 or higher
-* [App::Ack](https://metacpan.org/module/ack), install it by `cpan` or `cpanm`
+* [App::Ack](https://metacpan.org/module/ack)
 
 ## Basic Usage
 
