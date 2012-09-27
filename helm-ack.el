@@ -91,6 +91,7 @@
 
 (defun helm-c-ack-init ()
   (let ((cmd (read-string "Command: " (helm-c-ack-init-command))))
+    (helm-attrset 'recenter t)
     (with-current-buffer (helm-candidate-buffer 'global)
       (unless (zerop (call-process-shell-command cmd nil t nil))
         (error (message "Failed: %s" cmd))))))
