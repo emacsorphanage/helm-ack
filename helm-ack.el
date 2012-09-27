@@ -42,6 +42,9 @@
   :type 'boolean
   :group 'helm-ack)
 
+(defvar helm-c-ack-context-stack nil
+  "Stack for returning the point before jump")
+
 (defun helm-c-ack-mode-to-type (mode)
   (case mode
     (actionscript-mode "ack")
@@ -89,9 +92,27 @@
           helm-c-ack-base-command
           (or (and helm-c-ack-auto-set-filetype (helm-c-ack-type-option)) " ")))
 
+(defun helm-c-ack-save-current-context ()
+  (let ((file (buffer-file-name helm-current-buffer))
+        (curpoint (with-current-buffer helm-current-buffer
+                    (point))))
+    (push `((file  . ,file)
+            (point . ,curpoint)) helm-c-ack-context-stack)))
+
+(defun helm-ack-pop-context ()
+  (interactive)
+  (let ((context (pop helm-c-ack-context-stack)))
+    (unless context
+      (error "Context stack is empty!!"))
+    (let ((file (assoc-default 'file context))
+          (curpoint (assoc-default 'point context)))
+      (find-file file)
+      (goto-char curpoint))))
+
 (defun helm-c-ack-init ()
   (let ((cmd (read-string "Command: " (helm-c-ack-init-command))))
     (helm-attrset 'recenter t)
+    (helm-attrset 'before-jump-hook #'helm-c-ack-save-current-context)
     (with-current-buffer (helm-candidate-buffer 'global)
       (unless (zerop (call-process-shell-command cmd nil t nil))
         (error (message "Failed: %s" cmd))))))
