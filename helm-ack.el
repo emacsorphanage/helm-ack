@@ -99,7 +99,8 @@
     (push `((file  . ,file)
             (point . ,curpoint)) helm-c-ack-context-stack)))
 
-(defun helm-ack-pop-context ()
+;;;###autoload
+(defun helm-ack-pop-stack ()
   (interactive)
   (let ((context (pop helm-c-ack-context-stack)))
     (unless context
@@ -124,11 +125,10 @@
     (type . file-line)
     (candidate-number-limit . 9999)))
 
-(defvar helm-c-ack-buffer "*helm ack*")
-
+;;;###autoload
 (defun helm-ack ()
   (interactive)
-  (let ((buf (get-buffer-create helm-c-ack-buffer)))
+  (let ((buf (get-buffer-create "*helm ack*")))
     (helm :sources '(helm-c-ack-source) :buffer buf)))
 
 (provide 'helm-ack)

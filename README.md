@@ -20,6 +20,10 @@ Input search word
 
     M-x helm-ack
 
+Move to previous point on the stack.
+
+    M-x helm-ack-pop-stack
+
 
 ## Customize
 
