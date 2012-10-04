@@ -85,7 +85,7 @@
   (let ((type (helm-c-ack-mode-to-type major-mode)))
     (if type
         (format "--type=%s" type)
-      "")))
+      "--all")))
 
 (defun helm-c-ack-init-command ()
   (format "%s %s "
