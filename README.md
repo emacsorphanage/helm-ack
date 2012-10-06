@@ -36,7 +36,8 @@ Auto insert `--type` option, default is true.
     helm-c-ack-auto-set-filetype
 
 Insert thing at point as search pattern, you can set the value
-same as `thing-at-point`. Default value is `'word`
+same as `thing-at-point`. If you set nil, `helm-ack.el` does not insert
+anything. Default value is `'word`.
 
     helm-c-ack-thing-at-point
 
