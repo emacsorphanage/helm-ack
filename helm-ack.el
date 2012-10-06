@@ -42,6 +42,12 @@
   :type 'boolean
   :group 'helm-ack)
 
+(defcustom helm-c-ack-insert-at-point 'word
+  "Insert thing at point as search pattern.
+   You can set value same as `thing-at-point'"
+  :type 'symbol
+  :group 'helm-ack)
+
 (defvar helm-c-ack-context-stack nil
   "Stack for returning the point before jump")
 
@@ -87,10 +93,17 @@
         (format "--type=%s" type)
       "--all")))
 
+(defun helm-c-ack-thing-at-point ()
+  (let ((str (thing-at-point helm-c-ack-insert-at-point)))
+    (if (and str (typep str 'string))
+        (substring-no-properties str)
+      "")))
+
 (defun helm-c-ack-init-command ()
-  (format "%s %s "
+  (format "%s %s %s"
           helm-c-ack-base-command
-          (or (and helm-c-ack-auto-set-filetype (helm-c-ack-type-option)) " ")))
+          (or (and helm-c-ack-auto-set-filetype (helm-c-ack-type-option)) "")
+          (or (and helm-c-ack-insert-at-point (helm-c-ack-thing-at-point)) "")))
 
 (defun helm-c-ack-save-current-context ()
   (let ((file (buffer-file-name helm-current-buffer))
