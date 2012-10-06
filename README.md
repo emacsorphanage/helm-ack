@@ -35,6 +35,12 @@ Auto insert `--type` option, default is true.
 
     helm-c-ack-auto-set-filetype
 
+Insert thing at point as search pattern, you can set the value
+same as `thing-at-point`. Default value is `'word`
+
+    helm-c-ack-thing-at-point
+
+
 ## Sample Configuration
 
 ```` elisp
@@ -43,4 +49,7 @@ Auto insert `--type` option, default is true.
 
 ;; Does not insert '--type' option
 (setq helm-c-ack-auto-set-filetype nil)
+
+;; Insert "thing-at-point 'symbol" as search pattern
+(setq helm-c-ack-thing-at-point 'symbol)
 ````
