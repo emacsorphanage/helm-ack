@@ -128,8 +128,9 @@
     (helm-attrset 'recenter t)
     (helm-attrset 'before-jump-hook #'helm-c-ack-save-current-context)
     (with-current-buffer (helm-candidate-buffer 'global)
-      (unless (zerop (call-process-shell-command cmd nil t nil))
-        (error (message "Failed: %s" cmd))))))
+      (let ((ret (call-process-shell-command cmd nil t nil)))
+        (cond ((= ret 1) (error "no match"))
+              ((not (= ret 0)) (error "Failed ack")))))))
 
 (defvar helm-c-ack-source
   '((name . "helm ack")
