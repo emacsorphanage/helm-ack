@@ -14,6 +14,7 @@
 * helm 1.0 or higher
 * [App::Ack](https://metacpan.org/module/ack)
 
+
 ## Basic Usage
 
 Input search word
@@ -35,9 +36,9 @@ Auto insert `--type` option, default is true.
 
     helm-c-ack-auto-set-filetype
 
-Insert thing at point as search pattern, you can set the value
-same as `thing-at-point`. If you set nil, `helm-ack.el` does not insert
-anything. Default value is `'word`.
+Insert thing at point as default search pattern, you can set the value
+same as `thing-at-point`. If you set nil or use prefix-key(`C-u`),
+`helm-ack.el` does not insert anything. Default value is `'word`.
 
     helm-c-ack-thing-at-point
 

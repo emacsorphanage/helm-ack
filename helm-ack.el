@@ -100,11 +100,16 @@
         (substring-no-properties str)
       "")))
 
+(defun helm-c-ack-default-pattern ()
+  (if (or current-prefix-arg (null helm-c-ack-insert-at-point))
+      ""
+    (helm-c-ack-thing-at-point)))
+
 (defun helm-c-ack-init-command ()
   (format "%s %s %s"
           helm-c-ack-base-command
           (or (and helm-c-ack-auto-set-filetype (helm-c-ack-type-option)) "")
-          (or (and helm-c-ack-insert-at-point (helm-c-ack-thing-at-point)) "")))
+          (helm-c-ack-default-pattern)))
 
 (defun helm-c-ack-save-current-context ()
   (let ((file (buffer-file-name helm-current-buffer))
