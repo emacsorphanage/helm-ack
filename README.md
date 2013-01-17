@@ -17,7 +17,8 @@
 
 ## Basic Usage
 
-Input search word
+Input search word with ack. If you specified prefix argument(`C-u`), you can
+change searched directory.
 
     M-x helm-ack
 
@@ -37,8 +38,9 @@ Auto insert `--type` option, default is true.
     helm-c-ack-auto-set-filetype
 
 Insert thing at point as default search pattern, you can set the value
-same as `thing-at-point`. If you set nil or use prefix-key(`C-u`),
-`helm-ack.el` does not insert anything. Default value is `'word`.
+same as `thing-at-point`. If you set nil or use negative prefix-key
+(`C--` or `M--`), `helm-ack.el` does not insert anything.
+Default value is `'word`.
 
     helm-c-ack-thing-at-point
 
