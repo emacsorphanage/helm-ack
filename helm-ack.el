@@ -1,6 +1,6 @@
 ;;; helm-ack.el --- Ack command with helm interface
 
-;; Copyright (C) 2012 by Syohei YOSHIDA
+;; Copyright (C) 2013 by Syohei YOSHIDA
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-helm-ack
@@ -101,7 +101,8 @@
       "")))
 
 (defun helm-c-ack-default-pattern ()
-  (if (or current-prefix-arg (null helm-c-ack-insert-at-point))
+  (if (or (< (prefix-numeric-value current-prefix-arg) 0)
+          (null helm-c-ack-insert-at-point))
       ""
     (helm-c-ack-thing-at-point)))
 
@@ -129,12 +130,19 @@
       (find-file file)
       (goto-char curpoint))))
 
+(defun helm-c-ack-searched-directory ()
+  (if (= (prefix-numeric-value current-prefix-arg) 4)
+      (file-name-as-directory (read-directory-name "Search Directory: "))
+    default-directory))
+
 (defun helm-c-ack-init ()
-  (let ((cmd (read-string "Command: " (helm-c-ack-init-command))))
+  (let ((search-dir (helm-c-ack-searched-directory))
+        (cmd (read-string "Command: " (helm-c-ack-init-command))))
     (helm-attrset 'recenter t)
     (helm-attrset 'before-jump-hook #'helm-c-ack-save-current-context)
     (with-current-buffer (helm-candidate-buffer 'global)
-      (let ((ret (call-process-shell-command cmd nil t nil)))
+      (let* ((default-directory search-dir)
+             (ret (call-process-shell-command cmd nil t nil)))
         (cond ((= ret 1) (error "no match"))
               ((not (= ret 0)) (error "Failed ack")))))))
 
