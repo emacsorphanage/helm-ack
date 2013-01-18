@@ -147,7 +147,7 @@
               ((not (= ret 0)) (error "Failed ack")))))))
 
 (defvar helm-c-ack-source
-  '((name . "helm ack")
+  '((name . "Ack Search")
     (init . helm-c-ack-init)
     (candidates-in-buffer)
     (type . file-line)
