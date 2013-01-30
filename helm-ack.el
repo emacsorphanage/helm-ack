@@ -135,9 +135,14 @@
       (file-name-as-directory (read-directory-name "Search Directory: "))
     default-directory))
 
+(defvar helm-c-ack-command-stack nil
+  "Command history stack for helm-ack")
+
 (defun helm-c-ack-init ()
   (let ((search-dir (helm-c-ack-searched-directory))
-        (cmd (read-string "Command: " (helm-c-ack-init-command))))
+        (cmd (read-string "Command: "
+                          (helm-c-ack-init-command)
+                          'helm-c-ack-command-stack)))
     (helm-attrset 'recenter t)
     (helm-attrset 'before-jump-hook #'helm-c-ack-save-current-context)
     (with-current-buffer (helm-candidate-buffer 'global)
