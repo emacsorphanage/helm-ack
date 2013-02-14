@@ -101,8 +101,7 @@
       "")))
 
 (defun helm-c-ack-default-pattern ()
-  (if (or (< (prefix-numeric-value current-prefix-arg) 0)
-          (null helm-c-ack-insert-at-point))
+  (if (null helm-c-ack-insert-at-point)
       ""
     (helm-c-ack-thing-at-point)))
 
@@ -145,14 +144,19 @@
                           'helm-c-ack-command-stack)))
     (helm-attrset 'recenter t)
     (helm-attrset 'before-jump-hook #'helm-c-ack-save-current-context)
+    (when (< (prefix-numeric-value current-prefix-arg) 0)
+      (setq cmd (format "%s %s" cmd (file-relative-name (buffer-file-name) search-dir))))
     (with-current-buffer (helm-candidate-buffer 'global)
       (let* ((default-directory search-dir)
              (ret (call-process-shell-command cmd nil t nil)))
         (cond ((= ret 1) (error "no match"))
               ((not (= ret 0)) (error "Failed ack")))))))
 
-(defvar helm-c-ack-source
-  '((name . "Ack Search")
+(defun helm-c-ack-source ()
+  `((name . ,(if (< (prefix-numeric-value current-prefix-arg) 0)
+                 (format "Ack Seach(Only %s)"
+                         (file-name-nondirectory (buffer-file-name)))
+               "Ack Search"))
     (init . helm-c-ack-init)
     (candidates-in-buffer)
     (type . file-line)
@@ -162,7 +166,7 @@
 (defun helm-ack ()
   (interactive)
   (let ((buf (get-buffer-create "*helm ack*")))
-    (helm :sources '(helm-c-ack-source) :buffer buf)))
+    (helm-other-buffer (helm-c-ack-source) buf)))
 
 (provide 'helm-ack)
 
