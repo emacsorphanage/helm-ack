@@ -33,7 +33,7 @@
   "Ack command with helm interface"
   :group 'helm)
 
-(defcustom helm-c-ack-base-command "ack --nocolor --nogroup"
+(defcustom helm-c-ack-base-command "ack -H --nocolor --nogroup"
   "Base command of `ack'"
   :type 'string
   :group 'helm-ack)
