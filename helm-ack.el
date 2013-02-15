@@ -129,28 +129,31 @@
       (find-file file)
       (goto-char curpoint))))
 
-(defun helm-c-ack-searched-directory ()
-  (if (= (prefix-numeric-value current-prefix-arg) 4)
-      (file-name-as-directory (read-directory-name "Search Directory: "))
-    default-directory))
-
 (defvar helm-c-ack-command-stack nil
   "Command history stack for helm-ack")
 
+(defun helm-c-ack-placeholders ()
+  `(("\\$\\$" . ,(file-name-nondirectory (buffer-file-name)))))
+
+(defun helm-c-ack-replace-placeholder (cmd)
+  (loop with replaced = (copy-sequence cmd)
+        for (holder . value) in (helm-c-ack-placeholders)
+        do
+        (setq replaced (replace-regexp-in-string holder value replaced))
+        finally return replaced))
+
 (defun helm-c-ack-init ()
-  (let ((search-dir (helm-c-ack-searched-directory))
-        (cmd (read-string "Command: "
+  (let ((cmd (read-string "Command: "
                           (helm-c-ack-init-command)
                           'helm-c-ack-command-stack)))
     (helm-attrset 'recenter t)
     (helm-attrset 'before-jump-hook #'helm-c-ack-save-current-context)
-    (when (< (prefix-numeric-value current-prefix-arg) 0)
-      (setq cmd (format "%s %s" cmd (file-relative-name (buffer-file-name) search-dir))))
-    (with-current-buffer (helm-candidate-buffer 'global)
-      (let* ((default-directory search-dir)
-             (ret (call-process-shell-command cmd nil t nil)))
-        (cond ((= ret 1) (error "no match"))
-              ((not (= ret 0)) (error "Failed ack")))))))
+    (let ((filled (with-helm-current-buffer
+                    (helm-c-ack-replace-placeholder cmd))))
+      (with-current-buffer (helm-candidate-buffer 'global)
+        (let ((ret (call-process-shell-command filled nil t)))
+          (cond ((= ret 1) (error "no match"))
+                ((not (= ret 0)) (error "Failed ack"))))))))
 
 (defun helm-c-ack-source ()
   `((name . ,(if (< (prefix-numeric-value current-prefix-arg) 0)
