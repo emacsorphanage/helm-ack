@@ -155,8 +155,8 @@
           (cond ((= ret 1) (error "no match"))
                 ((not (= ret 0)) (error "Failed ack"))))))))
 
-(defun helm-c-ack-source ()
-  `((name . ,(if (< (prefix-numeric-value current-prefix-arg) 0)
+(defun helm-c-ack-source (arg)
+  `((name . ,(if (< arg 0)
                  (format "Ack Seach(Only %s)"
                          (file-name-nondirectory (buffer-file-name)))
                "Ack Search"))
@@ -166,10 +166,10 @@
     (candidate-number-limit . 9999)))
 
 ;;;###autoload
-(defun helm-ack ()
-  (interactive)
+(defun helm-ack (arg)
+  (interactive "p")
   (let ((buf (get-buffer-create "*helm ack*")))
-    (helm-other-buffer (helm-c-ack-source) buf)))
+    (helm-other-buffer (helm-c-ack-source arg) buf)))
 
 (provide 'helm-ack)
 
