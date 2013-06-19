@@ -1,0 +1,7 @@
+Revision history for helm-ack.el
+
+Revision 0.02  2013/06/19 syohex
+  - Support ack version 2
+
+Revision 0.01  2013/02/21 syohex
+  - Initial version
