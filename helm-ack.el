@@ -43,6 +43,11 @@
   :type 'boolean
   :group 'helm-ack)
 
+(defcustom helm-c-ack-version nil
+  "ack version"
+  :type 'integer
+  :group 'helm-ack)
+
 (defcustom helm-c-ack-insert-at-point 'word
   "Insert thing at point as search pattern.
    You can set value same as `thing-at-point'"
@@ -88,11 +93,16 @@
     (tcl-mode "tcl")
     ((tex-mode latex-mode yatex-mode) "tex")))
 
+(defsubst helm-c-ack-all-type-option ()
+  (if (= helm-c-ack-version 1)
+      "--all")
+  "")
+
 (defun helm-c-ack-type-option ()
   (let ((type (helm-c-ack-mode-to-type major-mode)))
     (if type
         (format "--type=%s" type)
-      "--all")))
+      (helm-c-ack-all-type-option))))
 
 (defun helm-c-ack-thing-at-point ()
   (let ((str (thing-at-point helm-c-ack-insert-at-point)))
@@ -142,7 +152,18 @@
         (setq replaced (replace-regexp-in-string holder value replaced))
         finally return replaced))
 
+(defun helm-c-set-ack-version ()
+  (with-temp-buffer
+    (unless (zerop (call-process-shell-command "ack --version" nil t))
+      (error "Failed: ack --version"))
+    (goto-char (point-min))
+    (if (re-search-forward "^ack \\([0-9]+\\)\.[0-9]+$" nil t)
+        (setq helm-c-ack-version (string-to-number (match-string 1)))
+      (error "Failed: ack version not found. Please set explicitly"))))
+
 (defun helm-c-ack-init ()
+  (unless helm-c-ack-version
+    (helm-c-set-ack-version))
   (let ((cmd (read-string "Command: "
                           (helm-c-ack-init-command)
                           'helm-c-ack-command-stack)))
