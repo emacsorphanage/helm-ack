@@ -168,7 +168,7 @@
                           (helm-c-ack-init-command)
                           'helm-c-ack-command-stack)))
     (helm-attrset 'recenter t)
-    (helm-attrset 'before-jump-hook #'helm-c-ack-save-current-context)
+    (helm-attrset 'before-jump-hook 'helm-c-ack-save-current-context)
     (let ((filled (with-helm-current-buffer
                     (helm-c-ack-replace-placeholder cmd))))
       (with-current-buffer (helm-candidate-buffer 'global)
