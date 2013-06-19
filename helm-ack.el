@@ -95,8 +95,8 @@
 
 (defsubst helm-c-ack-all-type-option ()
   (if (= helm-c-ack-version 1)
-      "--all")
-  "")
+      "--all"
+    ""))
 
 (defun helm-c-ack-type-option ()
   (let ((type (helm-c-ack-mode-to-type major-mode)))
