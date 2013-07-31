@@ -169,10 +169,13 @@
                           'helm-c-ack-command-stack)))
     (helm-attrset 'recenter t)
     (helm-attrset 'before-jump-hook 'helm-c-ack-save-current-context)
-    (let ((filled (with-helm-current-buffer
+    (let ((buf-coding buffer-file-coding-system)
+          (filled (with-helm-current-buffer
                     (helm-c-ack-replace-placeholder cmd))))
       (with-current-buffer (helm-candidate-buffer 'global)
-        (let ((ret (call-process-shell-command filled nil t)))
+        (let* ((coding-system-for-read buf-coding)
+               (coding-system-for-write buf-coding)
+               (ret (call-process-shell-command filled nil t)))
           (cond ((= ret 1) (error "no match"))
                 ((not (= ret 0)) (error "Failed ack"))))))))
 
