@@ -1,5 +1,8 @@
 Revision history for helm-ack.el
 
+Revision 0.03  2013/07/31 syohex
+  - Fix encoding problem
+
 Revision 0.02  2013/06/19 syohex
   - Support ack version 2
 
