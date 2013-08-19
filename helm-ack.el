@@ -4,7 +4,7 @@
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-helm-ack
-;; Version: 0.03
+;; Version: 0.04
 ;; Package-Requires: ((helm "1.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -143,7 +143,9 @@
   "Command history stack for helm-ack")
 
 (defun helm-c-ack-placeholders ()
-  `(("\\$\\$" . ,(file-name-nondirectory (buffer-file-name)))))
+  (cond ((buffer-file-name) `(("\\$\\$" . ,(file-name-nondirectory
+                                            (buffer-file-name)))))
+        (dired-directory `(("\\$\\$" . ,dired-directory)))))
 
 (defun helm-c-ack-replace-placeholder (cmd)
   (loop with replaced = (copy-sequence cmd)
