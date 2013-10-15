@@ -12,37 +12,40 @@
 
 * Emacs 23 or higher
 * helm 1.0 or higher
-* [App::Ack](https://metacpan.org/module/ack)
+* [App::Ack](https://metacpan.org/module/ack) or `ack-grep` debian package.
 
 
 ## Basic Usage
 
+#### `helm-ack`
+
 Input search word with ack. If you specified prefix argument(`C-u`), you can
 change searched directory.
 
-    M-x helm-ack
+#### `helm-ack-pop-stack`
 
 Move to previous point on the stack.
-
-    M-x helm-ack-pop-stack
 
 
 ## Customize
 
+#### `helm-c-ack-use-ack-grep`(Default is `nil`)
+
+If you install ack as debian package, please set `t` to this variable.
+
+#### `helm-c-ack-base-command`
+
 Base ack command, default is "ack --nocolor --nogroup"
 
-    helm-c-ack-base-command
-
+#### `helm-c-ack-auto-set-filetype`
 Auto insert `--type` option, default is true.
 
-    helm-c-ack-auto-set-filetype
+#### `helm-c-ack-thing-at-point`
 
 Insert thing at point as default search pattern, you can set the value
 same as `thing-at-point`. If you set nil or use negative prefix-key
 (`C--` or `M--`), `helm-ack.el` does not insert anything.
 Default value is `'word`.
-
-    helm-c-ack-thing-at-point
 
 
 ## Sample Configuration
