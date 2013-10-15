@@ -4,7 +4,7 @@
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-helm-ack
-;; Version: 0.04
+;; Version: 0.05
 ;; Package-Requires: ((helm "1.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -32,6 +32,11 @@
 (defgroup helm-ack nil
   "Ack command with helm interface"
   :group 'helm)
+
+(defcustom helm-c-ack-use-ack-grep nil
+  "Use ack-grep command"
+  :type 'boolean
+  :group 'helm-ack)
 
 (defcustom helm-c-ack-base-command "ack -H --nocolor --nogroup"
   "Base command of `ack'"
@@ -117,7 +122,9 @@
 
 (defun helm-c-ack-init-command ()
   (format "%s %s %s"
-          helm-c-ack-base-command
+          (if helm-c-ack-use-ack-grep
+              (replace-regexp-in-string "\\`ack" "ack-grep" helm-c-ack-base-command)
+            helm-c-ack-base-command)
           (or (and helm-c-ack-auto-set-filetype (helm-c-ack-type-option)) "")
           (helm-c-ack-default-pattern)))
 
@@ -155,13 +162,16 @@
         finally return replaced))
 
 (defun helm-c-set-ack-version ()
-  (with-temp-buffer
-    (unless (zerop (call-process-shell-command "ack --version" nil t))
-      (error "Failed: ack --version"))
-    (goto-char (point-min))
-    (if (re-search-forward "^ack \\([0-9]+\\)\.[0-9]+$" nil t)
-        (setq helm-c-ack-version (string-to-number (match-string 1)))
-      (error "Failed: ack version not found. Please set explicitly"))))
+  (let* ((ack-cmd (if helm-c-ack-use-ack-grep "ack-grep" "ack"))
+         (version-cmd (concat ack-cmd " --version"))
+         (check-regexp (concat "^" ack-cmd " \\([0-9]+\\)\.[0-9]+$")))
+    (with-temp-buffer
+      (unless (zerop (call-process-shell-command version-cmd nil t))
+        (error "Failed: %s --version" ack-cmd))
+      (goto-char (point-min))
+      (if (re-search-forward check-regexp nil t)
+          (setq helm-c-ack-version (string-to-number (match-string 1)))
+        (error "Failed: ack version not found. Please set explicitly")))))
 
 (defun helm-c-ack-init ()
   (unless helm-c-ack-version
