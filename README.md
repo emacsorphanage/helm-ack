@@ -10,7 +10,7 @@
 
 ## Requirements
 
-* Emacs 22.1 or higher
+* Emacs 23 or higher
 * helm 1.0 or higher
 * [App::Ack](https://metacpan.org/module/ack)
 
