@@ -1,5 +1,9 @@
 Revision history for helm-ack.el
 
+Revision 0.06  2013/11/02 syohex
+  - Fix version regexp for using git version, such as homebrew
+    (Thanks ShingoFukuyama)
+
 Revision 0.05  2013/10/15 syohex
   - Support ack-grep debian package
 
