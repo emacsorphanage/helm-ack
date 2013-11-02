@@ -164,7 +164,7 @@
 (defun helm-c-set-ack-version ()
   (let* ((ack-cmd (if helm-c-ack-use-ack-grep "ack-grep" "ack"))
          (version-cmd (concat ack-cmd " --version"))
-         (check-regexp (concat "^" ack-cmd " \\([0-9]+\\)\.[0-9]+$")))
+         (check-regexp (concat "^" ack-cmd " \\([0-9]+\\)\.[0-9]+")))
     (with-temp-buffer
       (unless (zerop (call-process-shell-command version-cmd nil t))
         (error "Failed: %s --version" ack-cmd))
