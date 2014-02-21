@@ -5,7 +5,7 @@
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-helm-ack
 ;; Version: 0.06
-;; Package-Requires: ((helm "1.0"))
+;; Package-Requires: ((helm "1.0") (cl-lib "0.4"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@
   "Stack for returning the point before jump")
 
 (defun helm-c-ack-mode-to-type (mode)
-  (case mode
+  (cl-case mode
     (actionscript-mode "ack")
     (ada-mode "ada")
     (asm-mode "asm")
@@ -155,11 +155,11 @@
         (dired-directory `(("\\$\\$" . ,dired-directory)))))
 
 (defun helm-c-ack-replace-placeholder (cmd)
-  (loop with replaced = (copy-sequence cmd)
-        for (holder . value) in (helm-c-ack-placeholders)
-        do
-        (setq replaced (replace-regexp-in-string holder value replaced))
-        finally return replaced))
+  (cl-loop with replaced = (copy-sequence cmd)
+           for (holder . value) in (helm-c-ack-placeholders)
+           do
+           (setq replaced (replace-regexp-in-string holder value replaced))
+           finally return replaced))
 
 (defun helm-c-set-ack-version ()
   (let* ((ack-cmd (if helm-c-ack-use-ack-grep "ack-grep" "ack"))
