@@ -1,5 +1,8 @@
 Revision history for helm-ack.el
 
+Revision 0.07  2014/02/22 syohex
+  - Use cl-lib instead of cl.el
+
 Revision 0.06  2013/11/02 syohex
   - Fix version regexp for using git version, such as homebrew
     (Thanks ShingoFukuyama)
