@@ -1,5 +1,9 @@
 Revision history for helm-ack.el
 
+Revision 0.09  2014/03/08 syohex
+  - Enable lexical binding
+  - fix for cl-function
+
 Revision 0.08  2014/03/03 syohex
   - Fix for cl-lib loading
 
