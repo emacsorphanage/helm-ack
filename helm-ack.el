@@ -1,4 +1,4 @@
-;;; helm-ack.el --- Ack command with helm interface
+;;; helm-ack.el --- Ack command with helm interface -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2014 by Syohei YOSHIDA
 
