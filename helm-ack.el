@@ -110,7 +110,7 @@
 
 (defun helm-c-ack-thing-at-point ()
   (let ((str (thing-at-point helm-c-ack-insert-at-point)))
-    (if (and str (typep str 'string))
+    (if (and str (cl-typep str 'string))
         (substring-no-properties str)
       "")))
 
