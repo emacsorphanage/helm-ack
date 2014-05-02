@@ -1,5 +1,10 @@
 Revision history for helm-ack.el
 
+Revision 0.10  2014/05/02 syohex
+  - Fix for new helm
+  - Fix for old helm naming conventions
+  - Improve popping context stack
+
 Revision 0.09  2014/03/08 syohex
   - Enable lexical binding
   - fix for cl-function
