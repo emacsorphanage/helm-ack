@@ -200,11 +200,19 @@
     (type . file-line)
     (candidate-number-limit . 9999)))
 
+(defun helm-ack--query ()
+  (setq helm-ack--last-query
+        (read-string "Command: " (helm-ack--base-command)
+                     'helm-ack--command-stack)))
+
 ;;;###autoload
 (defun helm-ack (arg)
   (interactive "p")
   (let ((buf (get-buffer-create "*helm ack*")))
-    (helm-other-buffer (helm-c-ack-source arg) buf)))
+    (unless helm-ack-version
+      (helm-ack--set-version))
+    (helm-ack--query)
+    (helm-other-buffer (helm-ack--source arg) buf)))
 
 (provide 'helm-ack)
 
