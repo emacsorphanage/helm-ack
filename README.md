@@ -29,18 +29,18 @@ Move to previous point on the stack.
 
 ## Customize
 
-#### `helm-c-ack-use-ack-grep`(Default is `nil`)
+#### `helm-ack-use-ack-grep`(Default is `nil`)
 
 If you install ack as debian package, please set `t` to this variable.
 
-#### `helm-c-ack-base-command`
+#### `helm-ack-base-command`
 
 Base ack command, default is "ack --nocolor --nogroup"
 
-#### `helm-c-ack-auto-set-filetype`
+#### `helm-ack-auto-set-filetype`
 Auto insert `--type` option, default is true.
 
-#### `helm-c-ack-thing-at-point`
+#### `helm-ack-thing-at-point`
 
 Insert thing at point as default search pattern, you can set the value
 same as `thing-at-point`. If you set nil or use negative prefix-key
@@ -50,13 +50,13 @@ Default value is `'word`.
 
 ## Sample Configuration
 
-```` elisp
+```lisp
 (require 'helm-config)
 (require 'helm-ack)
 
-;; Does not insert '--type' option
-(setq helm-c-ack-auto-set-filetype nil)
-
-;; Insert "thing-at-point 'symbol" as search pattern
-(setq helm-c-ack-thing-at-point 'symbol)
-````
+(custom-set-variables
+ ;; Does not insert '--type' option
+ '(helm-ack-auto-set-filetype nil)
+ ;; Insert "thing-at-point 'symbol" as search pattern
+ '(helm-ack-thing-at-point 'symbol))
+```
