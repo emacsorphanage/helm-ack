@@ -32,36 +32,52 @@
   "Ack command with helm interface"
   :group 'helm)
 
-(defcustom helm-c-ack-use-ack-grep nil
+(defcustom helm-ack-use-ack-grep nil
   "Use ack-grep command"
   :type 'boolean
   :group 'helm-ack)
 
-(defcustom helm-c-ack-base-command "ack -H --nocolor --nogroup"
+(defcustom helm-ack-base-command "ack -H --nocolor --nogroup"
   "Base command of `ack'"
   :type 'string
   :group 'helm-ack)
 
-(defcustom helm-c-ack-auto-set-filetype t
+(defcustom helm-ack-auto-set-filetype t
   "Setting file type automatically"
   :type 'boolean
   :group 'helm-ack)
 
-(defcustom helm-c-ack-version nil
+(defcustom helm-ack-version nil
   "ack version"
   :type 'integer
   :group 'helm-ack)
 
-(defcustom helm-c-ack-insert-at-point 'word
+(defcustom helm-ack-insert-at-point 'word
   "Insert thing at point as search pattern.
    You can set value same as `thing-at-point'"
   :type 'symbol
   :group 'helm-ack)
 
-(defvar helm-c-ack-context-stack nil
-  "Stack for returning the point before jump")
+(defvaralias 'helm-c-ack-use-ack-grep 'helm-ack-use-ack-grep)
+(make-obsolete-variable 'helm-c-ack-use-ack-grep 'helm-ack-use-ack-grep "0.10")
 
-(defun helm-c-ack-mode-to-type (mode)
+(defvaralias 'helm-c-ack-base-command 'helm-ack-base-command)
+(make-obsolete-variable 'helm-c-ack-base-command 'helm-ack-base-command "0.10")
+
+(defvaralias 'helm-c-ack-auto-set-filetype 'helm-ack-auto-set-filetype)
+(make-obsolete-variable 'helm-c-ack-auto-set-filetype 'helm-ack-auto-set-filetype "0.10")
+
+(defvaralias 'helm-c-ack-version 'helm-ack-version)
+(make-obsolete-variable 'helm-c-ack-version 'helm-ack-version "0.10")
+
+(defvaralias 'helm-c-ack-insert-at-point 'helm-ack-insert-at-point)
+(make-obsolete-variable 'helm-c-ack-insert-at-point 'helm-ack-insert-at-point "0.10")
+
+(defvar helm-ack--context-stack nil
+  "Stack for returning the point before jump")
+(defvar helm-ack--last-query)
+
+(defun helm-ack--mode-to-type (mode)
   (cl-case mode
     (actionscript-mode "ack")
     (ada-mode "ada")
@@ -97,47 +113,47 @@
     (tcl-mode "tcl")
     ((tex-mode latex-mode yatex-mode) "tex")))
 
-(defsubst helm-c-ack-all-type-option ()
-  (if (= helm-c-ack-version 1)
+(defsubst helm-ack--all-type-option ()
+  (if (= helm-ack-version 1)
       "--all"
     ""))
 
-(defun helm-c-ack-type-option ()
-  (let ((type (helm-c-ack-mode-to-type major-mode)))
+(defun helm-ack--type-option ()
+  (let ((type (helm-ack--mode-to-type major-mode)))
     (if type
         (format "--type=%s" type)
-      (helm-c-ack-all-type-option))))
+      (helm-ack--all-type-option))))
 
-(defun helm-c-ack-thing-at-point ()
-  (let ((str (thing-at-point helm-c-ack-insert-at-point)))
+(defun helm-ack--thing-at-point ()
+  (let ((str (thing-at-point helm-ack-insert-at-point)))
     (if (and str (cl-typep str 'string))
         (substring-no-properties str)
       "")))
 
-(defun helm-c-ack-default-pattern ()
-  (if (null helm-c-ack-insert-at-point)
+(defun helm-ack--default-pattern ()
+  (if (null helm-ack-insert-at-point)
       ""
-    (helm-c-ack-thing-at-point)))
+    (helm-ack--thing-at-point)))
 
-(defun helm-c-ack-init-command ()
+(defun helm-ack--base-command ()
   (format "%s %s %s"
-          (if helm-c-ack-use-ack-grep
-              (replace-regexp-in-string "\\`ack" "ack-grep" helm-c-ack-base-command)
-            helm-c-ack-base-command)
-          (or (and helm-c-ack-auto-set-filetype (helm-c-ack-type-option)) "")
-          (helm-c-ack-default-pattern)))
+          (if helm-ack-use-ack-grep
+              (replace-regexp-in-string "\\`ack" "ack-grep" helm-ack-base-command)
+            helm-ack-base-command)
+          (or (and helm-ack-auto-set-filetype (helm-ack--type-option)) "")
+          (helm-ack--default-pattern)))
 
-(defun helm-c-ack-save-current-context ()
+(defun helm-ack--save-current-context ()
   (let ((file (buffer-file-name helm-current-buffer))
         (curpoint (with-current-buffer helm-current-buffer
                     (point))))
     (push `((file  . ,file)
-            (point . ,curpoint)) helm-c-ack-context-stack)))
+            (point . ,curpoint)) helm-ack--context-stack)))
 
 ;;;###autoload
 (defun helm-ack-pop-stack ()
   (interactive)
-  (let ((context (pop helm-c-ack-context-stack)))
+  (let ((context (pop helm-ack--context-stack)))
     (unless context
       (error "Context stack is empty!!"))
     (let ((file (assoc-default 'file context))
@@ -145,23 +161,23 @@
       (find-file file)
       (goto-char curpoint))))
 
-(defvar helm-c-ack-command-stack nil
+(defvar helm-ack--command-stack nil
   "Command history stack for helm-ack")
 
-(defun helm-c-ack-placeholders ()
+(defun helm-ack--placeholders ()
   (cond ((buffer-file-name) `(("\\$\\$" . ,(file-name-nondirectory
                                             (buffer-file-name)))))
         (dired-directory `(("\\$\\$" . ,dired-directory)))))
 
-(defun helm-c-ack-replace-placeholder (cmd)
+(defun helm-ack--fill-placeholder (cmd)
   (cl-loop with replaced = (copy-sequence cmd)
-           for (holder . value) in (helm-c-ack-placeholders)
+           for (holder . value) in (helm-ack--placeholders)
            do
            (setq replaced (replace-regexp-in-string holder value replaced))
            finally return replaced))
 
-(defun helm-c-set-ack-version ()
-  (let* ((ack-cmd (if helm-c-ack-use-ack-grep "ack-grep" "ack"))
+(defun helm-ack--set-version ()
+  (let* ((ack-cmd (if helm-ack-use-ack-grep "ack-grep" "ack"))
          (version-cmd (concat ack-cmd " --version"))
          (check-regexp (concat "^" ack-cmd " \\([0-9]+\\)\.[0-9]+")))
     (with-temp-buffer
@@ -169,33 +185,28 @@
         (error "Failed: %s --version" ack-cmd))
       (goto-char (point-min))
       (if (re-search-forward check-regexp nil t)
-          (setq helm-c-ack-version (string-to-number (match-string 1)))
+          (setq helm-ack-version (string-to-number (match-string 1)))
         (error "Failed: ack version not found. Please set explicitly")))))
 
-(defun helm-c-ack-init ()
-  (unless helm-c-ack-version
-    (helm-c-set-ack-version))
-  (let ((cmd (read-string "Command: "
-                          (helm-c-ack-init-command)
-                          'helm-c-ack-command-stack)))
-    (helm-attrset 'recenter t)
-    (helm-attrset 'before-jump-hook 'helm-c-ack-save-current-context)
-    (let ((buf-coding buffer-file-coding-system)
-          (filled (with-helm-current-buffer
-                    (helm-c-ack-replace-placeholder cmd))))
-      (with-current-buffer (helm-candidate-buffer 'global)
-        (let* ((coding-system-for-read buf-coding)
-               (coding-system-for-write buf-coding)
-               (ret (call-process-shell-command filled nil t)))
-          (cond ((= ret 1) (error "no match"))
-                ((not (= ret 0)) (error "Failed ack"))))))))
+(defun helm-ack--init ()
+  (helm-attrset 'recenter t)
+  (helm-attrset 'before-jump-hook 'helm-ack--save-current-context)
+  (let ((buf-coding buffer-file-coding-system)
+        (filled (with-helm-current-buffer
+                  (helm-ack--fill-placeholder helm-ack--last-query))))
+    (with-current-buffer (helm-candidate-buffer 'global)
+      (let* ((coding-system-for-read buf-coding)
+             (coding-system-for-write buf-coding)
+             (ret (call-process-shell-command filled nil t)))
+        (cond ((= ret 1) (error "no match"))
+              ((not (= ret 0)) (error "Failed ack")))))))
 
-(defun helm-c-ack-source (arg)
+(defun helm-ack--source (arg)
   `((name . ,(if (< arg 0)
                  (format "Ack Seach(Only %s)"
                          (file-name-nondirectory (buffer-file-name)))
                "Ack Search"))
-    (init . helm-c-ack-init)
+    (init . helm-ack--init)
     (candidates-in-buffer)
     (type . file-line)
     (candidate-number-limit . 9999)))
