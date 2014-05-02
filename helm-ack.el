@@ -148,6 +148,7 @@
         (curpoint (with-current-buffer helm-current-buffer
                     (point))))
     (push `((file  . ,file)
+            (buffer . ,helm-current-buffer)
             (point . ,curpoint)) helm-ack--context-stack)))
 
 ;;;###autoload
@@ -158,7 +159,12 @@
       (error "Context stack is empty!!"))
     (let ((file (assoc-default 'file context))
           (curpoint (assoc-default 'point context)))
-      (find-file file)
+      (if file
+          (find-file file)
+        (let ((buf (assoc-default 'buffer context)))
+          (unless (buffer-live-p buf)
+            (error "%s is already killed"))
+          (switch-to-buffer buf)))
       (goto-char curpoint))))
 
 (defvar helm-ack--command-stack nil
