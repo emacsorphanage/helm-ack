@@ -1,5 +1,8 @@
 Revision history for helm-ack.el
 
+Revision 0.11  2014/05/03 syohex
+  - Support using 'helm-ack' as function
+
 Revision 0.10  2014/05/02 syohex
   - Fix for new helm
   - Fix for old helm naming conventions
