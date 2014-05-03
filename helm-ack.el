@@ -76,6 +76,7 @@
 (defvar helm-ack--context-stack nil
   "Stack for returning the point before jump")
 (defvar helm-ack--last-query)
+(defvar helm-ack--base-directory)
 
 (defun helm-ack--mode-to-type (mode)
   (cl-case mode
@@ -163,7 +164,7 @@
           (find-file file)
         (let ((buf (assoc-default 'buffer context)))
           (unless (buffer-live-p buf)
-            (error "%s is already killed"))
+            (error "%s is already killed" buf))
           (switch-to-buffer buf)))
       (goto-char curpoint))))
 
@@ -201,17 +202,15 @@
         (filled (with-helm-current-buffer
                   (helm-ack--fill-placeholder helm-ack--last-query))))
     (with-current-buffer (helm-candidate-buffer 'global)
-      (let* ((coding-system-for-read buf-coding)
+      (let* ((default-directory helm-ack--base-directory)
+             (coding-system-for-read buf-coding)
              (coding-system-for-write buf-coding)
              (ret (call-process-shell-command filled nil t)))
         (cond ((= ret 1) (error "no match"))
               ((not (= ret 0)) (error "Failed ack")))))))
 
-(defun helm-ack--source (arg)
-  `((name . ,(if (< arg 0)
-                 (format "Ack Seach(Only %s)"
-                         (file-name-nondirectory (buffer-file-name)))
-               "Ack Search"))
+(defvar helm-ack--source
+  '((name .  "Helm Ack")
     (init . helm-ack--init)
     (candidates-in-buffer)
     (type . file-line)
@@ -223,13 +222,17 @@
                      'helm-ack--command-stack)))
 
 ;;;###autoload
-(defun helm-ack (arg)
-  (interactive "p")
-  (let ((buf (get-buffer-create "*helm ack*")))
-    (unless helm-ack-version
-      (helm-ack--set-version))
-    (helm-ack--query)
-    (helm-other-buffer (helm-ack--source arg) buf)))
+(defun helm-ack (&optional dir)
+  (interactive)
+  (unless helm-ack-version
+    (helm-ack--set-version))
+  (setq helm-ack--base-directory
+        (or dir (if current-prefix-arg
+                    (read-directory-name "Search Directory: ")
+                  default-directory)))
+  (helm-ack--query)
+  (let ((default-directory helm-ack--base-directory))
+    (helm :sources '(helm-ack--source) :buffer "*helm ack*")))
 
 (provide 'helm-ack)
 
