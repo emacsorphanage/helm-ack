@@ -40,12 +40,10 @@ Base ack command, default is "ack --nocolor --nogroup"
 #### `helm-ack-auto-set-filetype`
 Auto insert `--type` option, default is true.
 
-#### `helm-ack-thing-at-point`
+#### `helm-ack-thing-at-point`(Default `'word`)
 
 Insert thing at point as default search pattern, you can set the value
-same as `thing-at-point`. If you set nil or use negative prefix-key
-(`C--` or `M--`), `helm-ack.el` does not insert anything.
-Default value is `'word`.
+same as `thing-at-point`.
 
 
 ## Sample Configuration
