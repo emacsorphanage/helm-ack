@@ -158,15 +158,13 @@
   (let ((context (pop helm-ack--context-stack)))
     (unless context
       (error "Context stack is empty!!"))
-    (let ((file (assoc-default 'file context))
-          (curpoint (assoc-default 'point context)))
-      (if file
-          (find-file file)
-        (let ((buf (assoc-default 'buffer context)))
-          (unless (buffer-live-p buf)
-            (error "%s is already killed" buf))
-          (switch-to-buffer buf)))
-      (goto-char curpoint))))
+    (helm-aif (assoc-default 'file context)
+        (find-file it)
+      (let ((buf (assoc-default 'buffer context)))
+        (unless (buffer-live-p buf)
+          (error "the buffer is already killed"))
+        (switch-to-buffer buf)))
+    (goto-char (assoc-default 'point context))))
 
 (defvar helm-ack--command-stack nil
   "Command history stack for helm-ack")
