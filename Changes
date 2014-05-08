@@ -1,5 +1,9 @@
 Revision history for helm-ack.el
 
+Revision 0.12  2014/05/03 syohex
+  - Refactoring
+    Improve code and error message
+
 Revision 0.11  2014/05/03 syohex
   - Support using 'helm-ack' as function
 
