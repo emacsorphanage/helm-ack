@@ -186,7 +186,7 @@
          (version-cmd (concat ack-cmd " --version"))
          (check-regexp (concat "^" ack-cmd " \\([0-9]+\\)\.[0-9]+")))
     (with-temp-buffer
-      (unless (zerop (call-process-shell-command version-cmd nil t))
+      (unless (zerop (process-file-shell-command version-cmd nil t))
         (error "Failed: %s --version" ack-cmd))
       (goto-char (point-min))
       (if (re-search-forward check-regexp nil t)
@@ -203,7 +203,7 @@
       (let* ((default-directory helm-ack--base-directory)
              (coding-system-for-read buf-coding)
              (coding-system-for-write buf-coding)
-             (ret (call-process-shell-command filled nil t)))
+             (ret (process-file-shell-command filled nil t)))
         (cond ((= ret 1) (error "no match"))
               ((not (= ret 0)) (error "Failed ack")))))))
 
