@@ -1,4 +1,4 @@
-# helm-ack.el
+# helm-ack.el [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
 
 ## Introduction
 `helm-ack.el` is App::ack helm interface.
@@ -58,3 +58,8 @@ same as `thing-at-point`.
  ;; Insert "thing-at-point 'symbol" as search pattern
  '(helm-ack-thing-at-point 'symbol))
 ```
+
+[melpa-link]: http://melpa.org/#/helm-ack
+[melpa-stable-link]: http://melpa.org/#/helm-ack
+[melpa-badge]: http://melpa.org/packages/helm-ack-badge.svg
+[melpa-stable-badge]: http://stable.melpa.org/packages/helm-ack-badge.svg
