@@ -1,5 +1,8 @@
 Revision history for helm-ack.el
 
+Revision 0.13  2014/10/30 syohex
+  - Fix for tramp
+
 Revision 0.12  2014/05/03 syohex
   - Refactoring
     Improve code and error message
