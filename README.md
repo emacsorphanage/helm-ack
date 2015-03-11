@@ -60,6 +60,6 @@ same as `thing-at-point`.
 ```
 
 [melpa-link]: http://melpa.org/#/helm-ack
-[melpa-stable-link]: http://melpa.org/#/helm-ack
+[melpa-stable-link]: http://stable.melpa.org/#/helm-ack
 [melpa-badge]: http://melpa.org/packages/helm-ack-badge.svg
 [melpa-stable-badge]: http://stable.melpa.org/packages/helm-ack-badge.svg
