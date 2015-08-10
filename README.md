@@ -3,6 +3,9 @@
 ## Introduction
 `helm-ack.el` is App::ack helm interface.
 
+I recommend you to use [helm-ag](https://github.com/emacs-helm-ag) instead of helm-ack. helm-ag provides much features than helm-ack and helm-ag also supports ack.
+
+
 ## Screenshot
 
 ![helm-ack](https://github.com/syohex/emacs-helm-ack/raw/master/image/helm-ack.png)
@@ -10,7 +13,7 @@
 
 ## Requirements
 
-* Emacs 23 or higher
+* Emacs 24 or higher
 * helm 1.0 or higher
 * [App::Ack](https://metacpan.org/module/ack) or `ack-grep` debian package.
 
