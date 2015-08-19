@@ -3,7 +3,7 @@
 ## Introduction
 `helm-ack.el` is App::ack helm interface.
 
-I recommend you to use [helm-ag](https://github.com/emacs-helm-ag) instead of helm-ack. helm-ag provides much features than helm-ack and helm-ag also supports ack.
+I recommend you to use [helm-ag](https://github.com/syohex/emacs-helm-ag) instead of helm-ack. helm-ag provides much features than helm-ack and helm-ag also supports ack.
 
 
 ## Screenshot
