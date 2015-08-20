@@ -1,5 +1,7 @@
 # helm-ack.el [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
 
+**This package is deprecated. This pacakge does not work with newer helm. Please switch to [helm-ag](https://github.com/syohex/emacs-helm-ag). You can also use ack with helm-ag.**
+
 ## Introduction
 `helm-ack.el` is App::ack helm interface.
 
